@@ -66,8 +66,8 @@ ingress:
 
 extraEnvVars: []
 
-attachExistingSecrets: []
-  # - existingSecretInKubernetes
+attachExistingSecrets:
+   - directus-postgresql-secret
 
 resources: {}
 
