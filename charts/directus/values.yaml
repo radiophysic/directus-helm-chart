@@ -36,7 +36,6 @@ serviceAccount:
   name: ""
 
 podAnnotations: {}
-
 podSecurityContext: {}
   # fsGroup: 2000
 
@@ -56,7 +55,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     # -- Hostname to expose. You should create CNAME DNS record with this hostname to redirect to ALB DNS name
-    - host: chart-example.local
+    - host: example.local
       paths:
         - path: /
           pathType: Prefix
@@ -107,50 +106,30 @@ createApplicationSecret: true
 
 applicationSecretName: "directus-application-secret"
 
-# -- Database engine. Could be set to one value from the following list: mysql, postgresql
-# Please disable installations for other database engines in this chart
-# Please not if you use mariadb server, set databaseEngine to 'mysql' value
-# Details are here - https://docs.directus.io/self-hosted/config-options.html#database
 databaseEngine: "postgresql"
-
-# -- Create PostgreSQL secret in Directus chart
-# If set to enable, postgresql secret with values of `postgres-password`, `password`, and `replication-password` variables will be created
-# Please consult the official bitnami postgres values file - https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml#L164
-# If set to false, you MUST create a secret resource in k8s for postgresql installation and set the correct value to the `existingSecret` in the postgresql settings setion
-createPostgresqlSecret: true
-
 
 createMysqlSecret: false
 mysql:
   enableInstallation: false
-  auth:
-    existingSecret: "directus-mysql-secret"
-    database: "directus_mysql"
-    username: "directus_mysql"
-  mysqlURL: ""
-  mysqlPort: ""
+  auth: {}
 
+createPostgresqlSecret: false
 postgresql:
   # -- The switch to switch off the installation of the postgresql
   # The rest of the settings are being used during the installation and for DB connection
   # Link to the values.yaml file in bitnami repo - https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
   enableInstallation: false
   auth:
-    existingSecret: "directus-postgresql-secret"
     database: "directus"
     username: "directus"
-  # If you want to use your own postgresql, please provide the URL to the existing instance in `postgresqlURL`
-  # Otherwise leave it empty to use postgresql server that being installed in the cluster with this chart
-  # Please note postgresql.auth.database will be used as a name of the database
-  # and postgresql.auth.username will be used as username during the connection
-  postgresqlURL: "directus@pg:5432/directus"
-  postgresqlPort: ""
+    password: ""
+  postgresqlURL: "pg"
+  postgresqlPort: "5432"
 
 redis:
   enabled: false
   auth:
     existingSecret: ""
-    # -- The key in the secret with password
     existingSecretPasswordKey: ""
   replica:
     replicaCount: 0
